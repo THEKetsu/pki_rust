@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	
+	<title>Page de téléchargement</title>
+</head>
+<body>
+	<div id="container">
+    <form method="get" action="/download">
+	<h1>Téléchargement de fichier</h1>
+	<p>Cliquez sur le bouton ci-dessous pour télécharger un fichier :</p>
+	<a href="../server.crt" download>
+		<button>Télécharger</button>
+	</a>
+</form>
+</div>
+
+</body>
+</html>
+
+<style>
+	@import url(https://fonts.googleapis.com/css?family=Montserrat:400,700);
+
+	h1 {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		height: 10vh;
+	}
+	
+	body {
+		background: #F2F3EB;
+	}
+	
+	#container {
+		border: solid 3px #474544;
+		max-width: 768px;
+		margin: 60px auto;
+		position: relative;
+		text-align: center; /* Ajout de cette ligne pour centrer le bouton */
+	}
+	
+	p {
+		padding: 37.5px;
+		margin: 50px 0;
+	}
+	
+	p {
+		background: none;
+		border: none;
+		color: #474544;
+		font-size: 2.000em;
+		font-weight: 400;
+		letter-spacing: 1px;
+		margin: 0em 0 1.875em 0;
+		padding: 0 0 0.875em 0;
+		text-transform: uppercase;
+		width: 100%;
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		-ms-box-sizing: border-box;
+		-o-box-sizing: border-box;
+		box-sizing: border-box;
+		-webkit-transition: all 0.3s;
+		-moz-transition: all 0.3s;
+		-ms-transition: all 0.3s;
+		-o-transition: all 0.3s;
+		transition: all 0.3s;
+	}
+	
+	p {
+		outline: none;
+		padding: 0 0 0.875em 0;
+	}
+	
+	p {
+		width: 100%;
+		font-weight: bold;
+	}
+	
+	button {
+		background: none;
+		border: solid 2px #474544;
+		color: #474544;
+		cursor: pointer;
+		margin-bottom: 20px;
+		display: inline-block;
+		font-family: 'Helvetica', Arial, sans-serif;
+		font-size: 0.875em;
+		font-weight: bold;
+		outline: none;
+		padding: 20px 35px;
+		text-transform: uppercase;
+		-webkit-transition: all 0.3s;
+		-moz-transition: all 0.3s;
+		-ms-transition: all 0.3s;
+		-o-transition: all 0.3s;
+		transition: all 0.3s;
+	}
+	
+	button:hover {
+		background: #474544;
+		color: #F2F3EB;
+	}}
+
+	</style>

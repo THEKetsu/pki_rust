@@ -1,0 +1,3 @@
+
+# Création des certificates Etape 1 et 2
+https://www.developpez.net/forums/d1967885/systemes/linux/securite/proftpd-creer-certificat-intermediaire-cert-user/

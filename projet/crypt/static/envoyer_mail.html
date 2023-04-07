@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Envoyer un e-mail</title>
+</head>
+<body>
+    <h1>Envoyer un e-mail</h1>
+    <form action="/send_email" method="post">
+        <label for="destinataire">Destinataire :</label>
+        <input type="email" id="destinataire" name="destinataire" required><br><br>
+        <label for="sujet">Sujet :</label>
+        <input type="text" id="sujet" name="sujet" required><br><br>
+        <label for="contenu">Contenu :</label><br>
+        <textarea id="contenu" name="contenu" rows="5" cols="30" required></textarea><br><br>
+        <input type="submit" value="Envoyer">
+    </form>
+</body>
+</html>
+
+
+<style>
+	/* style pour les champs de texte */
+input[type=text], input[type=email]{
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+}
+
+/* style pour les boutons */
+input [type=submit] {
+  background-color: #0077FF;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* style pour les étiquettes de formulaire */
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* style pour les messages d'erreur */
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+}
+</style>

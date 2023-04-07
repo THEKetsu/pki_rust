@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ISENCertificate</title>
+	<style>
+		h1{
+			font-family: Arial, sans-serif;
+			color: #000;
+		}
+
+		body {
+			margin: 0;
+			padding: 0;
+			font-family: Arial, sans-serif;
+			background-color: beige; /* modification de la couleur de fond */
+			color: #000; /* modification de la couleur du texte */
+		}
+
+		header {
+			background-color: #F2F3EB;
+			color: #fff;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 20px;
+		}
+
+		nav {
+			display: flex;
+		}
+
+		nav a {
+			color: #000; /* modification de la couleur des liens */
+			text-decoration: none;
+			padding: 15px; /* augmentation de la taille des liens */
+			margin-right: 10px;
+			border-radius: 5px;
+			font-size: 20px; /* augmentation de la taille de la police */
+		}
+
+		nav a:hover {
+			background-color: #fff;
+			color: #333;
+		}
+
+		#options {
+			background-image: url('https://picsum.photos/1920/1080');
+			background-size: cover;
+			height: 100vh;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			flex-direction: column;
+		}
+
+		#options a {
+			background-color: #F2F3EB;
+			color: #000;
+			text-decoration: none;
+			padding: 20px;
+			margin: 10px;
+			border-radius: 5px;
+			font-size: 24px;
+			display: inline-block;
+		}
+
+		#options a:hover {
+			background-color: #fff;
+			color: #333;
+		}
+	</style>
+</head>
+<body>
+	<header>
+		<h1>ISENCertificate</h1>
+		<nav>
+			<h3><a href="#">Home</a></h3>
+			<h3><a href="#">Help</a></h3>
+			<h3><a href="#">Service</a></h3>
+			<h3><a href="#">Contact</a></h3>
+		</nav>
+	</header>
+	<div id="options">
+		<h3><a href="#">Generate Certificate</a></h3>
+		<h3><a href="#">Revoke Certificate</a></h3>
+		<h3><a href="#">Send an Email</a></h3>
+	</div>
+</body>
+</html>

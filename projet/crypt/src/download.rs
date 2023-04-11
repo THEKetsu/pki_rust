@@ -1,9 +1,7 @@
-use actix_web::{ get, web, HttpResponse, Responder};
+use actix_web::{ get, HttpResponse, Responder};
 use serde::{Serialize, Deserialize};
 use std::fs;
 use std::path::PathBuf;
-
-
 
 #[derive(Serialize, Deserialize, Debug)]
 struct CertificateRequest {

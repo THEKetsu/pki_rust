@@ -111,7 +111,7 @@ fn signed_certificate() -> bool {
 
 #[post("/keys")]
 pub async fn generate_csr(info_: web::Form<CSRData>) -> Result<NamedFile, actix_web::Error> {
-    let path: PathBuf = "./static/envoyer_mail.html".into();
+    let _path: PathBuf = "./static/envoyer_mail.html".into();
     println!("{:?}",info_);
     // On mettra l'info après je veux juste voir la geule de info 
     generate_private_key_and_public_key(); // Exécuter la commande pour générer la clé privée
@@ -123,6 +123,6 @@ pub async fn generate_csr(info_: web::Form<CSRData>) -> Result<NamedFile, actix_
     } else {
         HttpResponse::Ok().body("Vérification CSR NOT");
     }
-    let path: PathBuf = "./static/download.html".into();
-        Ok(NamedFile::open(path)?) 
+    let _path: PathBuf = "./static/download.html".into();
+        Ok(NamedFile::open(_path)?) 
 }

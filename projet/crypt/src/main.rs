@@ -5,11 +5,9 @@ use std::path::PathBuf;
 use std::str;
 use rand::{Rng, thread_rng};
 use lazy_static::lazy_static;
-mod generateCSR;
+mod generate_csr;
 mod mailing;
 mod download;
-mod db;
-
 #[derive(Serialize, Deserialize, Debug)]
 struct CertificateRequest {
     email: String,
@@ -57,17 +55,15 @@ async fn verify(info: web::Form<CertificateRequest>) -> HttpResponse {
         HttpResponse::Ok().body("Code incorrect")
     }
 }
-
 */
 #[actix_web::main]
 async fn main() -> std::io::Result<()>{
     HttpServer::new(|| App::new()
         .service(index)
-        .service(generateCSR::generate_csr)
+        .service(generate_csr::generate_csr)
         .service(mailing::mail_send)
         .service(mailing::check_code)
         .service(download::download_file)
-        .service(db::create_db)
     )
         .bind("127.0.0.1:8080")?
         .run()

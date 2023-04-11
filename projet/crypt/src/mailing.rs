@@ -1,5 +1,5 @@
 use actix_files::NamedFile;
-use actix_web::{post, web, HttpResponse};
+use actix_web::{post, web};
 use serde::{Serialize, Deserialize};
 use std::path::PathBuf;
 use std::str;
@@ -30,12 +30,12 @@ lazy_static! {
 pub async fn mail_send(info2_: web::Form<Email>) -> Result<NamedFile, actix_web::Error> {
     let code = *RANDOM_NUMBER;
     let chaine = "Votre code est :";
-    let chaineF = format!("{} {}", chaine, code.to_string());
+    let chaine_f = format!("{} {}", chaine, code.to_string());
     let email = Message::builder()
         .from("bfrost@mailfence.com".parse().unwrap())
         .to(info2_.email.parse().unwrap())
         .subject("Vérification no-reply")
-        .body(chaineF)
+        .body(chaine_f)
         .unwrap();
 
     //Défini le serveur smtp mail
@@ -64,8 +64,8 @@ pub async fn check_code(info1_: web::Form<EmailCheck>) -> Result<NamedFile, acti
         Ok(NamedFile::open(path)?) 
     } 
     else {
-        let pathE: PathBuf = "./static/main.html".into();
-        Ok(NamedFile::open(pathE)?)
+        let path_error: PathBuf = "./static/main.html".into();
+        Ok(NamedFile::open(path_error)?)
 
     }
     

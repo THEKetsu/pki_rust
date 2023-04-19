@@ -27,7 +27,7 @@ fn generate_private_key_and_public_key() {
     .arg("-algorithm")
     .arg("RSA")
     .arg("-out")
-    .arg("private.key")
+    .arg("usercertificate/private.key")
     .output()
     .expect("Erreur lors de la génération de la clé privée");
 }
@@ -40,9 +40,9 @@ fn generate_certificate(info1_: web::Form<CSRData>){
         .arg("req")
         .arg("-new")
         .arg("-key")
-        .arg("private.key")
+        .arg("usercertificate/private.key")
         .arg("-out")
-        .arg("csr.csr")
+        .arg("usercertificate/csr.csr")
         .arg("-subj")
         .arg(information)
         .output()
@@ -56,7 +56,7 @@ fn verify_certificate() -> bool {
         .arg("-text")
         .arg("-noout")
         .arg("-in")
-        .arg("csr.csr")
+        .arg("usercertificate/csr.csr")
         .output();
     
     match result {
@@ -84,7 +84,7 @@ fn signed_certificate() -> bool {
         .arg("../ACI/intermediate.key")
         .arg("-CAcreateserial")
         .arg("-out")
-        .arg("server.crt")
+        .arg("usercertificate/server.crt")
         .arg("-days")
         .arg("365")
         .arg("-sha256")
@@ -117,7 +117,7 @@ pub async fn generate_csr(info_: web::Form<CSRData>) -> Result<NamedFile, actix_
     generate_private_key_and_public_key(); // Exécuter la commande pour générer la clé privée
     generate_certificate(info_); // Exécuter la commande pour générer la CSR
     signed_certificate();
-    let crt_content = fs::read_to_string("server.crt").unwrap();
+    let crt_content = fs::read_to_string("usercertificate/server.crt").unwrap();
     if   verify_certificate() == true && signed_certificate() == true{
         HttpResponse::Ok().body("Vérification CSR NOT");
     } else {

@@ -1,0 +1,5 @@
+[ v3_intermediate_ca ]
+authorityKeyIdentifier = keyid,issuer:always
+basicConstraints = CA:true,pathlen:0
+keyUsage = digitalSignature, keyCertSign, cRLSign
+

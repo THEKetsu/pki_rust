@@ -19,6 +19,7 @@ struct EmailCheck {
     csr: String,
 }
 
+
 lazy_static! {
     pub static ref RANDOM_NUMBER: i32 = thread_rng().gen_range(10000..=30000);
 }
@@ -32,16 +33,16 @@ pub async fn mail_send(info2_: web::Form<Email>) -> Result<NamedFile, actix_web:
     let chaine = "Votre code est :";
     let chaine_f = format!("{} {}", chaine, code.to_string());
     let email = Message::builder()
-        .from("bfrost@mailfence.com".parse().unwrap())
+        .from("cryptoISEN30@gmail.com".parse().unwrap())
         .to(info2_.email.parse().unwrap())
         .subject("Vérification no-reply")
         .body(chaine_f)
         .unwrap();
 
     //Défini le serveur smtp mail
-    let  mailer = SmtpTransport::relay("smtp.mailfence.com")
+    let  mailer = SmtpTransport::relay("smtp.gmail.com")
         .unwrap()
-        .credentials(Credentials::new("bfrost".into(), "Chaton83000!".into()))
+        .credentials(Credentials::new("cryptoisen30".into(), "htov vmlv vdkz vpor".into()))
         .build();
                 
      // Send the email
@@ -66,8 +67,6 @@ pub async fn check_code(info1_: web::Form<EmailCheck>) -> Result<NamedFile, acti
     else {
         let path_error: PathBuf = "./static/main.html".into();
         Ok(NamedFile::open(path_error)?)
-
-    }
-    
+    }    
 }
 

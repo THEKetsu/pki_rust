@@ -27,40 +27,33 @@ struct CSRData {
 }
 
 
-lazy_static! {
-    static ref RANDOM_NUMBER: i32 = thread_rng().gen_range(10000..=30000);
-}
-
 
 
 #[get("/")]
 async fn index() -> Result<NamedFile, actix_web::Error> {
-    let path: PathBuf = "./static/main.html".into();
+    let path: PathBuf = "./static/page.html".into();
     Ok(NamedFile::open(path)?)
 }
 
 
-
-/* 
-
-#[post("/verify")]
-async fn verify(info: web::Form<CertificateRequest>) -> HttpResponse {
-    //J'arrive pas à print les info json de la page html
-    println!("Received request {:?}", info);
-    let code = &info.csr;
-    let verif = *RANDOM_NUMBER;
-    let veristr= verif.to_string();
-    if  code == &veristr {
-        HttpResponse::Ok().body("Code correct")
-    } else {
-        HttpResponse::Ok().body("Code incorrect")
-    }
+#[get("/generate-certif")]
+async fn index_2() -> Result<NamedFile, actix_web::Error> {
+    let path: PathBuf = "./static/mail.html".into();
+    Ok(NamedFile::open(path)?)
 }
-*/
+
+#[get("/revoke")]
+async fn index_3() -> Result<NamedFile, actix_web::Error> {
+    let path: PathBuf = "./static/revoke.html".into();
+    Ok(NamedFile::open(path)?)
+}
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()>{
     HttpServer::new(|| App::new()
         .service(index)
+        .service(index_2)
+        .service(index_3)
         .service(generate_csr::generate_csr)
         .service(mailing::mail_send)
         .service(mailing::check_code)

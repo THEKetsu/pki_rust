@@ -511,6 +511,7 @@ dependencies = [
  "rand 0.8.5",
  "select",
  "serde",
+ "serde_json",
 ]
 
 [[package]]

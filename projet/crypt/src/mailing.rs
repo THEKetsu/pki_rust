@@ -8,7 +8,7 @@ use lettre::{Message, SmtpTransport, Transport};
 use rand::{Rng, thread_rng};
 use lazy_static::lazy_static;
 use std::sync::atomic::{AtomicPtr, Ordering};
-
+use crate::database::verifier;
 pub static INFO_EMAIL: AtomicPtr<Email> = AtomicPtr::new(std::ptr::null_mut());
 
 #[derive(Serialize, Deserialize, Debug,Clone)]
@@ -21,9 +21,28 @@ struct EmailCheck {
     csr: String,
 }
 
+// fonction qui génère un nombre aléatoire entre 10000 et 30000 et qui vérif que le code n'est pas déjà utilisé
+pub fn generate_code() -> i32 {
+    let code = thread_rng().gen_range(10000..=30000);
+    while verifier(code.to_string()) == true {
+        let code = thread_rng().gen_range(10000..=30000);
+    }
+    code
+}
+
+
+
+
+
+
+
+
+
+
 
 lazy_static! {
-    pub static ref RANDOM_NUMBER: i32 = thread_rng().gen_range(10000..=30000);
+    pub static ref RANDOM_NUMBER: i32 = generate_code();
+    //faire une boucle pour vérifer que le code n'est pas déjà utilisé
 }
 
 

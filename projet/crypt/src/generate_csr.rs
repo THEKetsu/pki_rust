@@ -6,11 +6,10 @@ use std::fs;
 use actix_files::NamedFile;
 use std::path::PathBuf;
 use std::sync::atomic::{AtomicPtr, Ordering};
-
 use crate::mailing::INFO_EMAIL;
-
 pub static INFO: AtomicPtr<CSRData> = AtomicPtr::new(std::ptr::null_mut());
-
+use crate::mailing::RANDOM_NUMBER;
+use crate::database::ajouter;
 
 #[derive(Serialize, Deserialize, Debug)]
 struct CertificateRequest {
@@ -120,32 +119,35 @@ fn signed_certificate(email:&String) -> bool {
 }
 
 
+
+
+
 #[post("/keys")]
 pub async fn generate_csr(info_: web::Form<CSRData>) -> Result<NamedFile, actix_web::Error> {
+    INFO.store(Box::into_raw(Box::new(info_.clone())), Ordering::SeqCst);
     let email_from_mailing = unsafe{ INFO_EMAIL.load(Ordering::SeqCst).as_ref().unwrap()};
     if info_.email_address != email_from_mailing.email{
         println!("Erreur d'adresse email");
         let _path: PathBuf = "./static/page.html".into();
         return Ok(NamedFile::open(_path)?);
     }
-    INFO.store(Box::into_raw(Box::new(info_.clone())), Ordering::SeqCst);
-    let _path: PathBuf = "./static/envoyer_mail.html".into();
-    let email_content = &info_.email_address;
-    let info_clone  = info_.clone();
-    let directory_name = format!("usercertificate/{}",email_content);
+    // check si le dossier existe
+    let directory_name = format!("usercertificate/{}/{}",email_from_mailing.email.clone(),RANDOM_NUMBER.to_string());
     match fs::create_dir_all(directory_name) {
         Ok(_) => println!("Directory created successfully"),
         Err(error) => println!("Error creating directory: {}", error),
     }
-
+    println!("{:?}",info_);
     // On mettra l'info après je veux juste voir la geule de info 
-    generate_private_key_and_public_key(email_content); // Exécuter la commande pour générer la clé privée
-    generate_certificate(info_clone); // Exécuter la commande pour générer la CSR
-    signed_certificate(email_content);
-    let path_verif = format!("usercertificate/{}/server.crt",email_content);
+    generate_private_key_and_public_key(&email_from_mailing.email.clone()); // Exécuter la commande pour générer la clé privée
+    generate_certificate(info_.clone()); // Exécuter la commande pour générer la CSR
+    signed_certificate(&email_from_mailing.email.clone());
+    let path_verif = format!("usercertificate/{}/server.crt",email_from_mailing.email.clone());
     let crt_content = fs::read_to_string(path_verif).unwrap();
-    if verify_certificate(email_content) {
+    if verify_certificate(&email_from_mailing.email.clone()) {
         println!("Vérification CSR OK");
+        let random_number = RANDOM_NUMBER.to_string();
+        ajouter(email_from_mailing.email.clone(),random_number);
     } else {
         println!("Vérification CSR NOT");
     }

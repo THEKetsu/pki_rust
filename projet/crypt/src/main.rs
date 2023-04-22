@@ -7,6 +7,7 @@ mod generate_csr;
 mod mailing;
 mod download;
 mod revoke;
+mod database;
 
 #[derive(Serialize, Deserialize, Debug)]
 struct CertificateRequest {
@@ -55,7 +56,7 @@ async fn main() -> std::io::Result<()>{
         .service(mailing::check_code)
         .service(download::download_file)
         .service(mailing::check_code)
-        .service(revoke::mail_send_revoke)
+        .service(revoke::revoker)
     )
         .bind("127.0.0.1:8080")?
         .run()

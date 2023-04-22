@@ -1,14 +1,13 @@
 use actix_files::NamedFile;
-use actix_web::{get, App,HttpServer};
+use actix_web::{get, App,HttpServer , web, HttpResponse, Responder};
 use serde::{Serialize, Deserialize};
 use std::path::PathBuf;
 use std::str;
-use rand::{Rng, thread_rng};
-use lazy_static::lazy_static;
 mod generate_csr;
 mod mailing;
 mod download;
 mod revoke;
+
 #[derive(Serialize, Deserialize, Debug)]
 struct CertificateRequest {
     email: String,
@@ -23,11 +22,8 @@ struct CSRData {
     locality: String,
     state: String,
     country: String,
-    email_address: String,
+    pub email_address: String,
 }
-
-
-
 
 #[get("/")]
 async fn index() -> Result<NamedFile, actix_web::Error> {

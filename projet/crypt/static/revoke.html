@@ -36,6 +36,12 @@
 			outline: none;
 			border-color: #007bff;
 			}
+
+			textarea {
+  			height: 200px;
+			width: 500px;
+			}
+
 	</style>
 	
 	<title>Formulaire POST</title>
@@ -44,6 +50,8 @@
 	<form method="post" action="/verify_revoke">
 		<label for="csr">Code de verification:</label>
 		<input type="csr" id="csr" name="csr"><br><br>
+		<label for="csr">Raison de révocation</label>
+		<textarea id="raison"></textarea>
 		<input type="submit" value="Envoyer">
 	</form>
 </body>

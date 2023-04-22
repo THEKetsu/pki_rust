@@ -7,11 +7,13 @@ use lettre::transport::smtp::authentication::Credentials;
 use lettre::{Message, SmtpTransport, Transport};
 use rand::{Rng, thread_rng};
 use lazy_static::lazy_static;
+use std::sync::atomic::{AtomicPtr, Ordering};
 
+pub static INFO_EMAIL: AtomicPtr<Email> = AtomicPtr::new(std::ptr::null_mut());
 
-#[derive(Serialize, Deserialize, Debug)]
-struct Email {
-    email: String,
+#[derive(Serialize, Deserialize, Debug,Clone)]
+pub struct Email {
+    pub email: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -31,6 +33,7 @@ lazy_static! {
 pub async fn mail_send(info2_: web::Form<Email>) -> Result<NamedFile, actix_web::Error> {
     let code = *RANDOM_NUMBER;
     let chaine = "Votre code est :";
+    INFO_EMAIL.store(Box::into_raw(Box::new(info2_.clone())), Ordering::SeqCst);
     let chaine_f = format!("{} {}", chaine, code.to_string());
     let email = Message::builder()
         .from("cryptoISEN30@gmail.com".parse().unwrap())
@@ -61,11 +64,13 @@ pub async fn check_code(info1_: web::Form<EmailCheck>) -> Result<NamedFile, acti
     let verif = *RANDOM_NUMBER;
     let veristr= verif.to_string();
     if  code == &veristr {
-        let path: PathBuf = "./static/index.html".into();
+        let path: PathBuf = "./static/formulaire.html".into();
+        println!("Code CHECK !");
         Ok(NamedFile::open(path)?) 
     } 
     else {
-        let path_error: PathBuf = "./static/main.html".into();
+        let path_error: PathBuf = "./static/mail.html".into();
+        println!("Code FAIL !");
         Ok(NamedFile::open(path_error)?)
     }    
 }

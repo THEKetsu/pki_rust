@@ -5,6 +5,12 @@ use std::str;
 use std::fs;
 use actix_files::NamedFile;
 use std::path::PathBuf;
+use std::sync::atomic::{AtomicPtr, Ordering};
+
+use crate::mailing::INFO_EMAIL;
+
+pub static INFO: AtomicPtr<CSRData> = AtomicPtr::new(std::ptr::null_mut());
+
 
 #[derive(Serialize, Deserialize, Debug)]
 struct CertificateRequest {
@@ -12,37 +18,40 @@ struct CertificateRequest {
     csr: String,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
-struct CSRData {
+#[derive(Serialize, Deserialize, Debug, Clone)]
+ pub  struct CSRData {
     common_name: String,
     organizational_unit: String,
     locality: String,
     state: String,
-    email_address: String,
+    pub email_address: String,
 }
 
-fn generate_private_key_and_public_key() {
+fn generate_private_key_and_public_key(email:&String) {
+    let path_private : String =  format!("usercertificate/{}/private.key",email);
     let _private_key = Command::new("openssl")
     .arg("genpkey")
     .arg("-algorithm")
     .arg("RSA")
     .arg("-out")
-    .arg("usercertificate/private.key")
+    .arg(path_private)
     .output()
     .expect("Erreur lors de la génération de la clé privée");
 }
 
-fn generate_certificate(info1_: web::Form<CSRData>){
+fn generate_certificate(info1_: CSRData){
      // Exécuter la commande pour générer la CSR  
+    let path_private_key : String =  format!("usercertificate/{}/private.key",info1_.email_address);
+    let path_csr : String =  format!("usercertificate/{}/csr.csr",info1_.email_address);
     let information = format!("/C=FR/ST={}/L={}/O=Isen/OU={}/CN={}/emailAddress={}", info1_.state, info1_.locality, info1_.organizational_unit, info1_.common_name, info1_.email_address);
     println!("{:?}",information);
      let _csr = Command::new("openssl") 
         .arg("req")
         .arg("-new")
         .arg("-key")
-        .arg("usercertificate/private.key")
+        .arg(path_private_key)
         .arg("-out")
-        .arg("usercertificate/csr.csr")
+        .arg(path_csr)
         .arg("-subj")
         .arg(information)
         .output()
@@ -50,13 +59,14 @@ fn generate_certificate(info1_: web::Form<CSRData>){
 }
 
 
-fn verify_certificate() -> bool {
+fn verify_certificate(email:&String) -> bool {
+    let path_verif = format!("usercertificate/{}/csr.csr",email);
     let result = Command::new("openssl")
         .arg("req")
         .arg("-text")
         .arg("-noout")
         .arg("-in")
-        .arg("usercertificate/csr.csr")
+        .arg(path_verif)
         .output();
     
     match result {
@@ -71,20 +81,22 @@ fn verify_certificate() -> bool {
     }
 }
 
-fn signed_certificate() -> bool {
+fn signed_certificate(email:&String) -> bool {
     println!("Generating certificate...");
+    let path_csr = format!("usercertificate/{}/csr.csr",email);
+    let path_crt = format!("usercertificate/{}/server.crt",email);
     let result = Command::new("openssl")
         .arg("x509")
         .arg("-req")
         .arg("-in")
-        .arg("usercertificate/csr.csr")
+        .arg(path_csr)
         .arg("-CA")
         .arg("../ACI/intermediate.crt")
         .arg("-CAkey")
         .arg("../ACI/intermediate.key")
         .arg("-CAcreateserial")
         .arg("-out")
-        .arg("usercertificate/server.crt")
+        .arg(path_crt)
         .arg("-days")
         .arg("365")
         .arg("-sha256")
@@ -108,21 +120,35 @@ fn signed_certificate() -> bool {
 }
 
 
-
 #[post("/keys")]
 pub async fn generate_csr(info_: web::Form<CSRData>) -> Result<NamedFile, actix_web::Error> {
+    let email_from_mailing = unsafe{ INFO_EMAIL.load(Ordering::SeqCst).as_ref().unwrap()};
+    if info_.email_address != email_from_mailing.email{
+        println!("Erreur d'adresse email");
+        let _path: PathBuf = "./static/page.html".into();
+        return Ok(NamedFile::open(_path)?);
+    }
+    INFO.store(Box::into_raw(Box::new(info_.clone())), Ordering::SeqCst);
     let _path: PathBuf = "./static/envoyer_mail.html".into();
-    println!("{:?}",info_);
+    let email_content = &info_.email_address;
+    let info_clone  = info_.clone();
+    let directory_name = format!("usercertificate/{}",email_content);
+    match fs::create_dir_all(directory_name) {
+        Ok(_) => println!("Directory created successfully"),
+        Err(error) => println!("Error creating directory: {}", error),
+    }
+
     // On mettra l'info après je veux juste voir la geule de info 
-    generate_private_key_and_public_key(); // Exécuter la commande pour générer la clé privée
-    generate_certificate(info_); // Exécuter la commande pour générer la CSR
-    signed_certificate();
-    let crt_content = fs::read_to_string("usercertificate/server.crt").unwrap();
-    if   verify_certificate() == true && signed_certificate() == true{
-        HttpResponse::Ok().body("Vérification CSR NOT");
+    generate_private_key_and_public_key(email_content); // Exécuter la commande pour générer la clé privée
+    generate_certificate(info_clone); // Exécuter la commande pour générer la CSR
+    signed_certificate(email_content);
+    let path_verif = format!("usercertificate/{}/server.crt",email_content);
+    let crt_content = fs::read_to_string(path_verif).unwrap();
+    if verify_certificate(email_content) {
+        println!("Vérification CSR OK");
     } else {
-        HttpResponse::Ok().body("Vérification CSR NOT");
+        println!("Vérification CSR NOT");
     }
     let _path: PathBuf = "./static/download.html".into();
-        Ok(NamedFile::open(_path)?) 
+    Ok(NamedFile::open(_path)?)
 }

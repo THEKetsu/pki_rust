@@ -77,7 +77,7 @@ fn signed_certificate() -> bool {
         .arg("x509")
         .arg("-req")
         .arg("-in")
-        .arg("csr.csr")
+        .arg("usercertificate/csr.csr")
         .arg("-CA")
         .arg("../ACI/intermediate.crt")
         .arg("-CAkey")

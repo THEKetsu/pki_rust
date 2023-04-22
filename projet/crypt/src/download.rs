@@ -11,7 +11,7 @@ struct CertificateRequest {
 
 #[get("/download")]
 pub async fn download_file() -> impl Responder {
-    let file_path = "server.crt";
+    let file_path = "usercertificate/server.crt";
 
     // Vérifier si le fichier existe
     if !fs::metadata(file_path).is_ok() {

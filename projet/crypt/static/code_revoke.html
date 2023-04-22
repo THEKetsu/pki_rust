@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style>
+
+		body {
+			background: #F2F3EB;
+		  }
+		form {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			height: 60vh;
+			
+		}
+		
+		
+		label {
+			margin: 10px;
+			color: #333;
+			font-size: 1.2em;
+			font-weight: bold;
+			}
+			
+			input {
+			margin: 10px;
+			padding: 8px;
+			border-radius: 4px;
+			border: 1px solid #ccc;
+			font-size: 1.2em;
+			color: #666;
+			}
+			
+			input:focus {
+			outline: none;
+			border-color: #007bff;
+			}
+	</style>
+	
+	<title>Formulaire POST</title>
+</head>
+<body>
+	<form method="post" action="/verify_revoke">
+		<label for="csr">Code de verification:</label>
+		<input type="csr" id="csr" name="csr"><br><br>
+		<input type="submit" value="Envoyer">
+	</form>
+</body>
+</html>

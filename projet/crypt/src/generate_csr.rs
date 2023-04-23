@@ -1,4 +1,4 @@
-use actix_web::{ post, web, HttpResponse};
+use actix_web::{ post, web};
 use serde::{Serialize, Deserialize};
 use std::process::Command;
 use std::str;

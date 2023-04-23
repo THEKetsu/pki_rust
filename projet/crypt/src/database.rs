@@ -3,14 +3,15 @@ use std::fs::File;
 use std::io::{Read, Write};
 use std::fs::OpenOptions;
 use std::vec::Vec;
-use std::io::{BufReader, BufWriter};
+use std::io::SeekFrom;
+use std::io::Seek;
 #[derive(Serialize, Deserialize,Debug,Clone)]
 struct Entry {
     path: String,
     code: String,
 }
 
-pub fn ajouter(path: String, code: String) -> std::io::Result<()> {
+pub fn ajouter(path: String, code: String)  {
     let mut file = OpenOptions::new()
     .read(true)
     .write(true)
@@ -25,24 +26,23 @@ pub fn ajouter(path: String, code: String) -> std::io::Result<()> {
         let serialized_entries = serde_json::to_string(&entries).unwrap() + "\n";
         file.write_all(serialized_entries.as_bytes()).unwrap();
     }
-    let reader = BufReader::new(file);
-    let  my_array: Vec<Entry> = serde_json::from_reader(reader)?;
-      // Ajouter la nouvelle entrée au tableau
-      let file = File::create("database.json")?;
-      let writer = BufWriter::new(file);
-      serde_json::to_writer(writer, &my_array)?;
-      println!("{:}",writer.to_string());
-      // Fermer le fichier ouvert
-      Ok(())
-}
+    else {
+        println!("File is not empty");
+        let mut entries: Vec<Entry> = serde_json::from_str(&contents).unwrap();
+        println!("entries: {:?}", entries);
+        for entry in &mut entries {
+            println!("TEST {} {}", entry.path, entry.code);
+        }
+        entries.push(Entry { path, code });
+        println!("entries: {:?}", entries);
+        let serialized_entries = serde_json::to_string(&entries).unwrap() + "\n";
+        println!("serialized_entries: {}", serialized_entries);
+        file.set_len(0).unwrap();
+        file.seek(SeekFrom::Start(0)).unwrap();
 
-
-
-
-
-
-
-
+        file.write_all(serialized_entries.as_bytes()).unwrap();
+    }
+    }
 
 
 

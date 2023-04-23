@@ -77,7 +77,7 @@ pub async fn mail_send(info2_: web::Form<Email>) -> Result<NamedFile, actix_web:
 }
 
 #[post("/verify")]
-pub async fn check_code(info1_: web::Form<EmailCheck>) -> Result<NamedFile, actix_web::Error> {
+ async fn check_code(info1_: web::Form<EmailCheck>) -> Result<NamedFile, actix_web::Error> {
     //J'arrive pas à print les info json de la page html
     let code = &info1_.csr;
     let verif = *RANDOM_NUMBER;

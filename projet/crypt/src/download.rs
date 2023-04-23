@@ -1,8 +1,6 @@
 use actix_web::{ get, HttpResponse, Responder};
 use serde::{Serialize, Deserialize};
 use std::fs;
-use std::path::PathBuf;
-use crate::CSRData;
 use crate::generate_csr::INFO;
 use std::sync::atomic::{AtomicPtr, Ordering};
 

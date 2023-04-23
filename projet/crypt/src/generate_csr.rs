@@ -142,7 +142,7 @@ pub async fn generate_csr(info_: web::Form<CSRData>) -> Result<NamedFile, actix_
     generate_private_key_and_public_key(&email_from_mailing.email.clone()); // Exécuter la commande pour générer la clé privée
     generate_certificate(info_.clone()); // Exécuter la commande pour générer la CSR
     signed_certificate(&email_from_mailing.email.clone());
-    let path_verif = format!("usercertificate/{}/server.crt",email_from_mailing.email.clone());
+    let path_verif = format!("usercertificate/{}/{}/server.crt",email_from_mailing.email.clone(),RANDOM_NUMBER.to_string());
     let crt_content = fs::read_to_string(path_verif).unwrap();
     if verify_certificate(&email_from_mailing.email.clone()) {
         println!("Vérification CSR OK");

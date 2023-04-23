@@ -2,7 +2,7 @@
 # Création des certificates Etape 1 et 2
 https://www.developpez.net/forums/d1967885/systemes/linux/securite/proftpd-creer-certificat-intermediaire-cert-user/
 
- openssl pkcs12 -export -inkey C:\Users\user\Desktop\2022-2023\Cours ISEN\Crypto\crypto\projet\ACI\intermediate.key -in server.crt -name alicePKCS -out root.pfx  
+ openssl pkcs12 -export -inkey crypt/usercertificate/20028/private.key -in crypt/usercertificate/20028/server.crt -name alicePKCS -out crypt/usercertificate/20028/root.pfx  
 
  # Création server OSCP 
 
@@ -14,7 +14,6 @@ touch index
 [ocsp]
 url = http://<your-ocsp-server-address>
 issuer = <path-to-your-acr-cert>
-
 
 openssl ocsp -index index -port 8080 -rsigner ocsp.crt -CA acr.crt -CAkey acr.key -text -out ocsp.log -rndfile /dev/urandom
 

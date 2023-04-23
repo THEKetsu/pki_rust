@@ -3,3 +3,7 @@ authorityKeyIdentifier = keyid,issuer:always
 basicConstraints = CA:true,pathlen:0
 keyUsage = digitalSignature, keyCertSign, cRLSign
 
+[root_ca]
+basicConstraints=CA:TRUE
+subjectKeyIdentifier=hash
+authorityKeyIdentifier=keyid:always,issuer:always

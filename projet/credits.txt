@@ -5,26 +5,17 @@ https://www.developpez.net/forums/d1967885/systemes/linux/securite/proftpd-creer
  openssl pkcs12 -export -inkey C:\Users\user\Desktop\2022-2023\Cours ISEN\Crypto\crypto\projet\ACI\intermediate.key -in server.crt -name alicePKCS -out root.pfx  
 
  # Création server OSCP 
-openssl req -newkey rsa:2048 -keyout ocsp.key -out ocsp.csr
-openssl x509 -req -in ocsp.csr -CA CA.crt -CAkey CA.key -CAcreateserial -out ocsp.crt -days 365
 
-Configurer le serveur OCSP :
-openssl ocsp -port 8080 -index index.txt -rsigner ocsp.crt -rkey ocsp.key -CA CA.crt -text -out ocsp.log
+openssl ecparam -genkey -name prime256v1 -out OCSP/oscp.key
+openssl req -new -key OCSP/ocsp.key -out OCSP/ocsp.csr -config ocsp.cnf
+openssl ca -in OSCP/ocsp.csr -out OSCP/ocsp.crt -cert ACI/intermediate.crt -keyfile ACI/intermediate.key -config openssl.cnf
+touch index
 
-Ajouter l'adresse du serveur OCSP au certificat du serveur web :
-openssl x509 -in server.crt -out server.pem -outform PEM
-openssl x509 -in server.pem -text -noout | grep DNS
-openssl x509 -req -in server.csr -out server.crt -sha256 -CA CA.crt -CAkey CA.key -CAcreateserial -extfile server.ext
+[ocsp]
+url = http://<your-ocsp-server-address>
+issuer = <path-to-your-acr-cert>
 
-Modifier le fichier server.ext pour ajouter l'adresse du serveur OCSP :
-authorityInfoAccess = OCSP;URI:http://ocsp.example.com
 
-Signer le nouveau certificat avec le certificat de l'autorité de certification :
-openssl x509 -req -in server.csr -out server.crt -sha256 -CA CA.crt -CAkey CA.key -CAcreateserial -extfile server.ext
+openssl ocsp -index index -port 8080 -rsigner ocsp.crt -CA acr.crt -CAkey acr.key -text -out ocsp.log -rndfile /dev/urandom
 
-Révoquer un certificat :
-openssl ca -config openssl.cnf -revoke client.crt
-openssl ca -config openssl.cnf -gencrl -out ca.crl
-
-Vérifier la révocation :
-openssl ocsp -issuer CA.crt -cert client.crt -url http://ocsp.example.com:8080 -resp_text
+openssl ca -config openssl.cnf -revoke server.crt

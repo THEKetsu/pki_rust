@@ -1,0 +1,30 @@
+[default]
+CA = ocsp_ca
+dir = ./OCSP
+certificate = $dir/ocsp.crt
+serial = $dir/ocsp.serial
+database = $dir/ocsp.db
+private_key = $dir/ocsp.key
+response_cache = $dir/ocsp_cache
+
+[ocsp_ca]
+ca_cert = ./root_ca.crt
+ca_key = ./root_ca.key
+
+[req]
+default_bits = 2048
+default_md = sha256
+prompt = no
+distinguished_name = dn
+
+[dn]
+C = FR
+ST = Paris
+L = Paris
+O = My Organization
+OU = My Unit
+CN = ocsp.mydomain.com
+
+[req_extensions]
+basicConstraints = CA:false
+keyUsage = digitalSignature, nonRepudiation, keyEncipherment

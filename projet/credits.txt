@@ -2,7 +2,7 @@
 # Création des certificates Etape 1 et 2
 https://www.developpez.net/forums/d1967885/systemes/linux/securite/proftpd-creer-certificat-intermediaire-cert-user/
 
- openssl pkcs12 -export -inkey crypt/usercertificate/20028/private.key -in crypt/usercertificate/20028/server.crt -name alicePKCS -out crypt/usercertificate/20028/root.pfx  
+ openssl pkcs12 -export -inkey usercertificate/bender.quent@gmail.com/20028/private.key -in usercertificate/bender.quent@gmail.com/20028/server.crt -name alicePKCS -out usercertificate/bender.quent@gmail.com/20028/root.pfx  
 
  # Création server OSCP 
 

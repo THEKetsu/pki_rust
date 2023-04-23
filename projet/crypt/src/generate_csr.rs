@@ -29,9 +29,11 @@ struct CertificateRequest {
 fn generate_private_key_and_public_key(email:&String) {
     let path_private : String =  format!("usercertificate/{}/{}/private.key",email,RANDOM_NUMBER.to_string());
     let _private_key = Command::new("openssl")
-    .arg("genpkey")
-    .arg("-algorithm")
-    .arg("RSA")
+    .arg("ecparam")
+    .arg("-name")
+    .arg("prime256v1")
+    .arg("-genkey")
+    .arg("-noout")
     .arg("-out")
     .arg(path_private)
     .output()
@@ -51,6 +53,7 @@ fn generate_certificate(info1_: CSRData){
         .arg(path_private_key)
         .arg("-out")
         .arg(path_csr)
+        .arg("-sha384")
         .arg("-subj")
         .arg(information)
         .output()

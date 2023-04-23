@@ -27,7 +27,7 @@ struct CertificateRequest {
 }
 
 fn generate_private_key_and_public_key(email:&String) {
-    let path_private : String =  format!("usercertificate/{}/private.key",email);
+    let path_private : String =  format!("usercertificate/{}/{}/private.key",email,RANDOM_NUMBER.to_string());
     let _private_key = Command::new("openssl")
     .arg("genpkey")
     .arg("-algorithm")
@@ -40,8 +40,8 @@ fn generate_private_key_and_public_key(email:&String) {
 
 fn generate_certificate(info1_: CSRData){
      // Exécuter la commande pour générer la CSR  
-    let path_private_key : String =  format!("usercertificate/{}/private.key",info1_.email_address);
-    let path_csr : String =  format!("usercertificate/{}/csr.csr",info1_.email_address);
+    let path_private_key : String =  format!("usercertificate/{}/{}/private.key",info1_.email_address,RANDOM_NUMBER.to_string());
+    let path_csr : String =  format!("usercertificate/{}/{}/csr.csr",info1_.email_address,RANDOM_NUMBER.to_string());
     let information = format!("/C=FR/ST={}/L={}/O=Isen/OU={}/CN={}/emailAddress={}", info1_.state, info1_.locality, info1_.organizational_unit, info1_.common_name, info1_.email_address);
     println!("{:?}",information);
      let _csr = Command::new("openssl") 
@@ -59,7 +59,7 @@ fn generate_certificate(info1_: CSRData){
 
 
 fn verify_certificate(email:&String) -> bool {
-    let path_verif = format!("usercertificate/{}/csr.csr",email);
+    let path_verif = format!("usercertificate/{}/{}/csr.csr",email,RANDOM_NUMBER.to_string());
     let result = Command::new("openssl")
         .arg("req")
         .arg("-text")
@@ -82,8 +82,8 @@ fn verify_certificate(email:&String) -> bool {
 
 fn signed_certificate(email:&String) -> bool {
     println!("Generating certificate...");
-    let path_csr = format!("usercertificate/{}/csr.csr",email);
-    let path_crt = format!("usercertificate/{}/server.crt",email);
+    let path_csr = format!("usercertificate/{}/{}/csr.csr",email,RANDOM_NUMBER.to_string());
+    let path_crt = format!("usercertificate/{}/{}/server.crt",email,RANDOM_NUMBER.to_string());
     let result = Command::new("openssl")
         .arg("x509")
         .arg("-req")

@@ -86,22 +86,24 @@ fn verify_certificate(email:&String) -> bool {
 fn signed_certificate(email:&String) -> bool {
     println!("Generating certificate...");
     let path_csr = format!("usercertificate/{}/{}/csr.csr",email,RANDOM_NUMBER.to_string());
-    let path_crt = format!("usercertificate/{}/{}/server.crt",email,RANDOM_NUMBER.to_string());
+    let path_crt = format!("usercertificate/{}/{}/certificate.crt",email,RANDOM_NUMBER.to_string());
     let result = Command::new("openssl")
         .arg("x509")
         .arg("-req")
         .arg("-in")
         .arg(path_csr)
         .arg("-CA")
-        .arg("../ACI/intermediate.crt")
+        .arg("../ACI/intermediate_ca.crt")
         .arg("-CAkey")
-        .arg("../ACI/intermediate.key")
+        .arg("../ACI/intermediate_ca.key")
         .arg("-CAcreateserial")
         .arg("-out")
         .arg(path_crt)
         .arg("-days")
         .arg("365")
-        .arg("-sha256")
+        .arg("-sha384")
+        .arg("-passin") // ajouter cette ligne pour spécifier le mot de passe pour l'option -CAkey
+        .arg("pass:isen") 
         .output();
     println!("certificate CREATED...");
     match result {
@@ -145,7 +147,7 @@ pub async fn generate_csr(info_: web::Form<CSRData>) -> Result<NamedFile, actix_
     generate_private_key_and_public_key(&email_from_mailing.email.clone()); // Exécuter la commande pour générer la clé privée
     generate_certificate(info_.clone()); // Exécuter la commande pour générer la CSR
     signed_certificate(&email_from_mailing.email.clone());
-    let path_verif = format!("usercertificate/{}/{}/server.crt",email_from_mailing.email.clone(),RANDOM_NUMBER.to_string());
+    let path_verif = format!("usercertificate/{}/{}/certificate.crt",email_from_mailing.email.clone(),RANDOM_NUMBER.to_string());
     let crt_content = fs::read_to_string(path_verif).unwrap();
     if verify_certificate(&email_from_mailing.email.clone()) {
         println!("Vérification CSR OK");

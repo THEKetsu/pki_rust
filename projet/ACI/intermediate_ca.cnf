@@ -1,0 +1,2 @@
+[ca_intermediate]
+basicConstraints = critical, CA:true, pathlen:0

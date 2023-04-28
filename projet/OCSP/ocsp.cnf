@@ -1,30 +1,23 @@
-[default]
-CA = ocsp_ca
-dir = ./OCSP
-certificate = $dir/ocsp.crt
-serial = $dir/ocsp.serial
-database = $dir/ocsp.db
-private_key = $dir/ocsp.key
-response_cache = $dir/ocsp_cache
-
-[ocsp_ca]
-ca_cert = ./root_ca.crt
-ca_key = ./root_ca.key
-
-[req]
-default_bits = 2048
-default_md = sha256
-prompt = no
-distinguished_name = dn
-
-[dn]
-C = FR
-ST = Paris
-L = Paris
-O = My Organization
-OU = My Unit
-CN = ocsp.mydomain.com
+[CA_default]
+dir             = OCSP
+certs           = $dir/certs
+crl_dir         = $dir/crl
+database        = $dir/index.txt
+new_certs_dir   = $dir/newcerts
+certificate     = $dir/ocsp.crt
+serial          = $dir/serial
+crlnumber       = $dir/crlnumber
+crl             = $dir/crl.pem
+private_key     = $dir/ocsp.key
+RANDFILE        = $dir/.rand
+name_opt        = ca_default
+cert_opt        = ca_default
+default_days    = 365
+default_crl_days= 30
+default_md      = sha256
+preserve        = no
+policy          = policy_anything
 
 [req_extensions]
 basicConstraints = CA:false
-keyUsage = digitalSignature, nonRepudiation, keyEncipherment
+keyUsage =  critical, digitalSignature, nonRepudiation, keyCertSign

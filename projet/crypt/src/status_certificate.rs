@@ -4,7 +4,9 @@ use serde::{Serialize, Deserialize};
 use std::str;
 use std::process::Command;
 use crate::database::{verifier};
-use std::thread;
+use std::sync::mpsc::{channel, Receiver};
+use std::sync::{Arc, Mutex};
+
 
 #[derive(Serialize, Deserialize, Debug,Clone)]
 pub struct CheckInfos {

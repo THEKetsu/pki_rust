@@ -68,6 +68,7 @@ pub fn verifier(code: String) -> bool {
     false
 }
 
+
 pub fn revoquer(code: String) -> bool {
     let mut file = File::open("database.json").unwrap();
     let mut contents = String::new();

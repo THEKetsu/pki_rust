@@ -1,0 +1,66 @@
+OCSP Response Data:
+    OCSP Response Status: successful (0x0)
+    Response Type: Basic OCSP Response
+    Version: 1 (0x0)
+    Responder Id: C = AU, ST = Some-State, O = Internet Widgits Pty Ltd, CN = OCSP
+    Produced At: Apr 29 22:51:52 2023 GMT
+    Responses:
+    Certificate ID:
+      Hash Algorithm: sha1
+      Issuer Name Hash: 0C68B1D28FD29916FB355345CB233CCCBC4FDAF6
+      Issuer Key Hash: 2D27E9A7DF20C70049AEC727D32717A12922414A
+      Serial Number: 3353BD7315C7DE4151753DCEFDCDD8DA0E8163CD
+    Cert Status: unknown
+    This Update: Apr 29 22:51:52 2023 GMT
+
+    Response Extensions:
+        OCSP Nonce: 
+            0410EA63BF0B6F389B77C0A6D322F22DC7A3
+    Signature Algorithm: ecdsa-with-SHA256
+    Signature Value:
+        30:44:02:20:1f:90:f5:82:00:ae:26:db:a0:60:b5:0d:0b:36:
+        78:57:f7:b4:7e:47:a9:81:28:c3:1e:88:41:61:a4:34:dc:5a:
+        02:20:72:b4:ca:c3:b5:ac:f6:08:88:ab:bc:4e:c0:47:78:11:
+        db:0f:9d:98:5b:dc:d4:ac:7f:82:d1:6c:04:ed:92:a2
+Certificate:
+    Data:
+        Version: 1 (0x0)
+        Serial Number:
+            33:53:bd:73:15:c7:de:41:51:75:3d:ce:fd:cd:d8:da:0e:81:63:d1
+        Signature Algorithm: ecdsa-with-SHA256
+        Issuer: C=FR, ST=France, L=Toulon, O=Isen, OU=Cyber, CN=ACI/emailAddress=bender.quent@gmail.com
+        Validity
+            Not Before: Apr 29 22:50:49 2023 GMT
+            Not After : Apr 28 22:50:49 2025 GMT
+        Subject: C=AU, ST=Some-State, O=Internet Widgits Pty Ltd, CN=OCSP
+        Subject Public Key Info:
+            Public Key Algorithm: id-ecPublicKey
+                Public-Key: (256 bit)
+                pub:
+                    04:c7:7c:9c:46:a1:03:94:2b:10:49:ee:17:1e:a3:
+                    ec:fe:9c:cd:5e:99:c0:52:ee:9e:77:76:44:d8:8e:
+                    9f:1c:7f:c9:77:0a:28:a4:5c:06:01:f3:b5:0b:b1:
+                    16:75:a6:58:8a:a4:63:db:e8:bd:c3:39:8d:e0:a3:
+                    87:58:80:6e:93
+                ASN1 OID: prime256v1
+                NIST CURVE: P-256
+    Signature Algorithm: ecdsa-with-SHA256
+    Signature Value:
+        30:44:02:20:06:f0:84:d2:be:c7:d8:cd:9b:6e:97:da:bb:62:
+        a2:41:97:77:ac:b4:9d:2c:3c:9a:e0:7b:13:8f:4a:f6:64:41:
+        02:20:4e:db:bc:93:f4:8b:23:f4:4c:74:32:67:d4:35:3c:c8:
+        e2:7b:f2:2c:e3:af:72:73:a8:b9:51:60:9f:38:ea:c6
+-----BEGIN CERTIFICATE-----
+MIIB0jCCAXkCFDNTvXMVx95BUXU9zv3N2NoOgWPRMAoGCCqGSM49BAMCMIGDMQsw
+CQYDVQQGEwJGUjEPMA0GA1UECAwGRnJhbmNlMQ8wDQYDVQQHDAZUb3Vsb24xDTAL
+BgNVBAoMBElzZW4xDjAMBgNVBAsMBUN5YmVyMQwwCgYDVQQDDANBQ0kxJTAjBgkq
+hkiG9w0BCQEWFmJlbmRlci5xdWVudEBnbWFpbC5jb20wHhcNMjMwNDI5MjI1MDQ5
+WhcNMjUwNDI4MjI1MDQ5WjBUMQswCQYDVQQGEwJBVTETMBEGA1UECAwKU29tZS1T
+dGF0ZTEhMB8GA1UECgwYSW50ZXJuZXQgV2lkZ2l0cyBQdHkgTHRkMQ0wCwYDVQQD
+DARPQ1NQMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEx3ycRqEDlCsQSe4XHqPs
+/pzNXpnAUu6ed3ZE2I6fHH/JdwoopFwGAfO1C7EWdaZYiqRj2+i9wzmN4KOHWIBu
+kzAKBggqhkjOPQQDAgNHADBEAiAG8ITSvsfYzZtul9q7YqJBl3estJ0sPJrgexOP
+SvZkQQIgTtu8k/SLI/RMdDJn1DU8yOJ78izjr3JzqLlRYJ846sY=
+-----END CERTIFICATE-----
+usercertificate\cryptoISEN30@gmail.com\18229\certificate.crt: unknown
+	This Update: Apr 29 22:51:52 2023 GMT

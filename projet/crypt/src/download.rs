@@ -2,7 +2,7 @@ use actix_web::{ get, HttpResponse, Responder};
 use serde::{Serialize, Deserialize};
 use std::fs;
 use crate::generate_csr::INFO;
-use std::sync::atomic::{AtomicPtr, Ordering};
+use std::sync::atomic::{Ordering};
 
 #[derive(Serialize, Deserialize, Debug)]
 struct CertificateRequest {

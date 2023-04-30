@@ -3,48 +3,45 @@ use actix_web::{post, web};
 use serde::{Serialize, Deserialize};
 use std::path::PathBuf;
 use std::str;
-use rand::{Rng, thread_rng};
-use lazy_static::lazy_static;
-use crate::database::{revoquer, verifier};
+use crate::database::{ verifier};
 use std::process::Command;
-
-lazy_static! {
-    pub static ref RANDOM_NUMBER_REVOKE: i32 = thread_rng().gen_range(10000..=30000);
-}
+use std::sync::atomic::{AtomicPtr, Ordering};
 
 
-#[derive(Serialize, Deserialize, Debug)]
-struct EmailCheck {
+pub static INFO_REVOKE: AtomicPtr<CodeCheck> = AtomicPtr::new(std::ptr::null_mut());
+
+
+#[derive(Serialize, Deserialize, Debug,Clone)]
+pub struct CodeCheck {
     csr: String,
 }
 
 
+#[derive(Serialize, Deserialize, Debug)]
+pub struct Reason {
+    reason : String,
+    email: String,
+}
 
 
-fn revoke_ocsp(email:&String) -> bool {
+fn revoke_crl(email:&String,code:&String,_reason:&String) -> bool {
+    let path_certif = format!("usercertificate/{}/{}/certificate.crt", email,code);
     let result = Command::new("openssl")
-        .arg("ocsp")
-        .arg("-port")
-        .arg("8888")
-        .arg("-index")
-        .arg("OCSP/index.txt")
-        .arg("-rsigner ")
-        .arg("OCSP/ocsp.crt")
-        .arg("-rkey")
-        .arg("OCSP/ocsp.key")
-        .arg("-CA")
-        .arg("ACI/intermediate_ca.crt")
-        .arg("-ndays")
-        .arg("365")
+        .arg("ca")
+        .arg("-config")
+        .arg("../ACI/intermediate_ca.cnf")
+        .arg("-revoke")
+        .arg(path_certif)
         .output();
     
     match result {
         Ok(output) => {
             println!("{}", String::from_utf8_lossy(&output.stdout));
-            true
+            println!("{}", String::from_utf8_lossy(&output.stderr));
+            output.status.success()
         },
         Err(error) => {
-            eprintln!("Erreur lors de la génération de la CSR : {}", error);
+            eprintln!("Erreur lors de la révocation: {}", error);
             false
         }
     }
@@ -53,16 +50,58 @@ fn revoke_ocsp(email:&String) -> bool {
 
 
 #[post("/revoke")]
-pub async fn revoker(info1_: web::Form<EmailCheck>) -> Result<NamedFile, actix_web::Error> {
-    if false == revoquer(info1_.csr.clone()) {
+pub async fn revoker() -> Result<NamedFile, actix_web::Error> {
         let path: PathBuf = "./static/revoke.html".into();
         Ok(NamedFile::open(path)?)
+}
+
+
+
+#[post("/verify_revoke")]
+pub async fn verify_revoker(code_check : web::Form<CodeCheck>) -> Result<NamedFile, actix_web::Error> {
+    INFO_REVOKE.store(Box::into_raw(Box::new(code_check.clone())), Ordering::SeqCst);
+    if verifier(code_check.csr.clone()) == true {
+        let path: PathBuf = "./static/revocation.html".into();
+        Ok(NamedFile::open(path)?)
     }
-    else{
-        println !("Revoked");
-        let path: PathBuf = "./static/page.html".into();
+    else {
+        let path: PathBuf = "./static/revoke.html".into();
         Ok(NamedFile::open(path)?)
     }
 }
 
 
+fn update_crl() -> bool {
+    let result = Command::new("openssl")
+        .arg("ca")
+        .arg("-config")
+        .arg("../ACI/intermediate_ca.cnf")
+        .arg("-gencrl")
+        .arg("-out")
+        .arg("../CRL/list.crl")
+        .output();
+    
+    match result {
+        Ok(output) => {
+            println!("{}", String::from_utf8_lossy(&output.stdout));
+            println!("{}", String::from_utf8_lossy(&output.stderr));
+            output.status.success()
+        },
+        Err(error) => {
+            eprintln!("Erreur lors de la mise à jour de la CRL: {}", error);
+            false
+        }
+    }
+}
+
+#[post("/revoke_reason")]
+pub async fn revoke_reason(reason: web::Form<Reason>) -> Result<NamedFile, actix_web::Error> {
+    println!("email: {}", reason.email);
+    println!("reason: {}", reason.reason);
+    println!("csr: {}", unsafe { &INFO_REVOKE.load(Ordering::SeqCst).as_ref().unwrap().csr });
+    revoke_crl(&reason.email,unsafe { &INFO_REVOKE.load(Ordering::SeqCst).as_ref().unwrap().csr },&reason.reason);
+    update_crl();
+        let path: PathBuf = "./static/page.html".into();
+        println!("Revocation effectuée");
+        Ok(NamedFile::open(path)?)
+}

@@ -42,14 +42,25 @@
 			width: 500px;
 			}
 
+			ul{
+				color: #333;
+			}
+
 	</style>
 	
 	<title>Formulaire POST</title>
 </head>
 <body>
-	<form method="post" action="/verify_revoke">
-		<label for="csr">Code de Certificat (Reçu par mail):</label>
-		<input type="csr" id="csr" name="csr"><br><br>
+	<form method="post" action="/revoke_reason">
+		<label for="reason_revoke">Raison de révocation</label>
+		<input type="csr" id="reason" name="reason"><br><br>
+		<ul class="liste_reason">
+			<li>keyCompromise</li>
+			<li>unspecified</li>
+			<li>CACompromise</li>
+		</ul>
+        <label for="reason_revoke">Email pour confirmation</label>
+        <input type="email" id="email" name="email"><br><br>
 		<input type="submit" value="Envoyer">
 	</form>
 </body>

@@ -1,5 +1,5 @@
 use actix_files::NamedFile;
-use actix_web::{get, App,HttpServer , web, HttpResponse, Responder};
+use actix_web::{get, App,HttpServer};
 use serde::{Serialize, Deserialize};
 use std::path::PathBuf;
 use std::str;
@@ -8,6 +8,7 @@ mod mailing;
 mod download;
 mod revoke;
 mod database;
+mod status_certificate;
 
 #[derive(Serialize, Deserialize, Debug)]
 struct CertificateRequest {
@@ -45,18 +46,29 @@ async fn index_3() -> Result<NamedFile, actix_web::Error> {
     Ok(NamedFile::open(path)?)
 }
 
+#[get("/see_certificate")]
+async fn index_4() -> Result<NamedFile, actix_web::Error> {
+    let path: PathBuf = "./static/verif.html".into();
+    Ok(NamedFile::open(path)?)
+}
+
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()>{
     HttpServer::new(|| App::new()
         .service(index)
         .service(index_2)
         .service(index_3)
+        .service(index_4)
         .service(generate_csr::generate_csr)
         .service(mailing::mail_send)
         .service(mailing::check_code)
         .service(download::download_file)
         .service(mailing::check_code)
         .service(revoke::revoker)
+        .service(revoke::verify_revoker)
+        .service(revoke::revoke_reason)
+        .service(status_certificate::see_ocsp_status)
     )
         .bind("127.0.0.1:8080")?
         .run()

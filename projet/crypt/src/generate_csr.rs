@@ -88,22 +88,14 @@ fn signed_certificate(email:&String) -> bool {
     let path_csr = format!("usercertificate/{}/{}/csr.csr",email,RANDOM_NUMBER.to_string());
     let path_crt = format!("usercertificate/{}/{}/certificate.crt",email,RANDOM_NUMBER.to_string());
     let result = Command::new("openssl")
-        .arg("x509")
-        .arg("-req")
+        .arg("ca")
+        .arg("-batch")
+        .arg("-config")
+        .arg("../ACI/intermediate_ca_copy.cnf")
         .arg("-in")
         .arg(path_csr)
-        .arg("-CA")
-        .arg("../ACI/intermediate_ca.crt")
-        .arg("-CAkey")
-        .arg("../ACI/intermediate_ca.key")
-        .arg("-CAcreateserial")
         .arg("-out")
-        .arg(path_crt)
-        .arg("-days")
-        .arg("365")
-        .arg("-sha384")
-        .arg("-passin") // ajouter cette ligne pour spécifier le mot de passe pour l'option -CAkey
-        .arg("pass:isen") 
+        .arg(path_crt) 
         .output();
     println!("certificate CREATED...");
     match result {

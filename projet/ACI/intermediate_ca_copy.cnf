@@ -1,0 +1,29 @@
+[ ca ]
+default_ca = ca_intermediate
+
+[ca_intermediate]
+basicConstraints = critical, CA:true, pathlen:0
+private_key = ../ACI/intermediate_ca.key
+certificate = ../ACI/intermediate_ca.crt
+database = ../ACI/intermediate_ca.db
+keyUsage = critical, digitalSignature, keyCertSign, cRLSign
+new_certs_dir = ../ACI/newcerts
+extendedKeyUsage = OCSPSigning,emailProtection
+subjectKeyIdentifier = hash
+default_md =sha256
+authorityKeyIdentifier = keyid:always,issuer
+default_crl_days = 30
+preserve = no
+policy = policy_anything
+serial = ../ACI/serial
+default_days = 365
+
+
+[ policy_anything ]
+countryName = optional
+stateOrProvinceName = optional
+localityName = optional
+organizationName = optional
+organizationalUnitName = optional
+commonName = optional
+emailAddress = optional

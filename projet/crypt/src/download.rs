@@ -10,7 +10,6 @@ struct CertificateRequest {
     csr: String,
 }
 
-
 #[get("/download")]
 pub async fn download_file() -> impl Responder {
     let info = unsafe { INFO.load(Ordering::SeqCst).as_ref().unwrap() };
@@ -33,7 +32,6 @@ pub async fn download_file() -> impl Responder {
         actix_web::http::header::CONTENT_DISPOSITION,
         actix_web::http::header::HeaderValue::from_str(&format!("attachment; filename=\"{}\"", file_name)).unwrap(),
     );
-
     // Retourner la réponse HTTP
     response
 }

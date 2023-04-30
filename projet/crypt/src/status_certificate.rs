@@ -2,11 +2,8 @@
 use actix_web::{post, web, HttpResponse};
 use serde::{Serialize, Deserialize};
 use std::str;
-use std::process::Command;
 use crate::database::{verifier};
-use std::sync::mpsc::{channel, Receiver};
-use std::sync::{Arc, Mutex};
-
+use std::process::{Command};
 
 #[derive(Serialize, Deserialize, Debug,Clone)]
 pub struct CheckInfos {
@@ -16,7 +13,7 @@ pub struct CheckInfos {
 
 
 
-fn launch_oscp() -> bool {
+fn launch_oscp() -> std::process::Child {
     let result = Command::new("openssl")
         .arg("ocsp")
         .arg("-port")
@@ -31,19 +28,19 @@ fn launch_oscp() -> bool {
         .arg("../ACI/intermediate_ca.crt")
         .arg("-text")
         .arg("-crl_check")
-        .output();
+        .spawn();
     
-    match result {
-        Ok(output) => {
-            println!("{}", String::from_utf8_lossy(&output.stdout));
-            println!("{}", String::from_utf8_lossy(&output.stderr));
-            output.status.success()
-        },
-        Err(error) => {
-            eprintln!("Erreur lors de la révocation: {}", error);
-            false
+        match result {
+            Ok(child) => {
+                // Afficher un message pour confirmer que le processus est lancé
+                println!("OCSP lancé en arrière-plan avec le PID {}", child.id());
+                child
+            },
+            Err(error) => {
+                eprintln!("Erreur lors du lancement de l'OCSP: {}", error);
+                std::process::exit(1)
+            }
         }
-    }
 }
 
 
@@ -74,14 +71,13 @@ match result {
 
 #[post("/verify_status")]
 pub async fn see_ocsp_status(code : web::Form<CheckInfos> ) -> HttpResponse {
+  
     if verifier(code.csr.clone()) == false {
         return HttpResponse::Ok().body("Le certificat n'existe pas");
     }
-    let ocsp_thread = thread::spawn(|| {
-        launch_oscp();
-    });
-     let content: String= request_ocsp(&code.email, &code.csr);
-    ocsp_thread.join().unwrap();
+    let mut child = launch_oscp();
+    let content: String= request_ocsp(&code.email, &code.csr);
     println!("BODY_CONTENT : {}",content);
+    child.kill().expect("Echec de l'arrêt de l'OCSP");
     HttpResponse::Ok().body(content)
 }

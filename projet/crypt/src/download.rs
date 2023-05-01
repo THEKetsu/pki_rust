@@ -3,6 +3,7 @@ use serde::{Serialize, Deserialize};
 use std::fs;
 use crate::generate_csr::INFO;
 use std::sync::atomic::{Ordering};
+use crate::mailing::RANDOM_NUMBER;
 
 #[derive(Serialize, Deserialize, Debug)]
 struct CertificateRequest {
@@ -13,14 +14,14 @@ struct CertificateRequest {
 #[get("/download")]
 pub async fn download_file() -> impl Responder {
     let info = unsafe { INFO.load(Ordering::SeqCst).as_ref().unwrap() };
-    let file_path = format!("usercertificate/{}/server.crt",info.email_address);
+    let file_path = format!("usercertificate/{}/{}/{}.pfx",info.email_address,RANDOM_NUMBER.to_string(),info.email_address);
     let file_path_copy = file_path.clone();
     // Vérifier si le fichier existe
     if !fs::metadata(file_path).is_ok() {
         return HttpResponse::NotFound().body(format!("Le fichier {} n'existe pas.", file_path_copy));
     }
     // Définir le nom de fichier à télécharger
-    let file_name = "server.crt";
+    let file_name = "USER.pfx";
     // Lire le contenu du fichier
     let file_content = fs::read(file_path_copy).unwrap();
 

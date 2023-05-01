@@ -1,0 +1,39 @@
+Certificate:
+    Data:
+        Version: 1 (0x0)
+        Serial Number: 6 (0x6)
+        Signature Algorithm: ecdsa-with-SHA256
+        Issuer: C=FR, ST=France, L=Toulon, O=Isen, OU=Cyber, CN=ACI
+        Validity
+            Not Before: May  1 11:16:54 2023 GMT
+            Not After : Apr 30 11:16:54 2024 GMT
+        Subject: C=FR, ST=Egypte, L=Caire, O=Isen, OU=ISEN, CN=FR/emailAddress=hgouiran@gmail.com
+        Subject Public Key Info:
+            Public Key Algorithm: id-ecPublicKey
+                Public-Key: (256 bit)
+                pub:
+                    04:bc:66:ec:1d:b2:b9:4f:36:2a:55:56:c7:03:ae:
+                    05:06:0f:f8:ec:6c:bc:49:5a:cf:17:c1:09:4c:bd:
+                    d7:37:27:a4:a2:8c:d7:e4:b7:ee:7c:74:32:c0:6e:
+                    34:6c:0b:d0:ce:9e:e0:da:92:8e:13:81:3a:6f:3d:
+                    a2:3f:0b:e4:5c
+                ASN1 OID: prime256v1
+                NIST CURVE: P-256
+    Signature Algorithm: ecdsa-with-SHA256
+    Signature Value:
+        30:46:02:21:00:bd:4e:c1:e4:26:57:28:64:7c:5a:95:47:3c:
+        8f:c5:01:4f:55:d2:6d:80:1d:10:2f:a0:09:60:5a:4e:69:8f:
+        75:02:21:00:d9:a1:5d:38:be:f3:f5:e8:f4:d2:98:07:07:f5:
+        7c:ea:f1:ce:0d:a9:42:46:a4:28:d9:c0:c9:c0:e6:5b:75:9a
+-----BEGIN CERTIFICATE-----
+MIIBwTCCAWYCAQYwCgYIKoZIzj0EAwIwXDELMAkGA1UEBhMCRlIxDzANBgNVBAgM
+BkZyYW5jZTEPMA0GA1UEBwwGVG91bG9uMQ0wCwYDVQQKDARJc2VuMQ4wDAYDVQQL
+DAVDeWJlcjEMMAoGA1UEAwwDQUNJMB4XDTIzMDUwMTExMTY1NFoXDTI0MDQzMDEx
+MTY1NFowfDELMAkGA1UEBhMCRlIxDzANBgNVBAgMBkVneXB0ZTEOMAwGA1UEBwwF
+Q2FpcmUxDTALBgNVBAoMBElzZW4xDTALBgNVBAsMBElTRU4xCzAJBgNVBAMMAkZS
+MSEwHwYJKoZIhvcNAQkBFhJoZ291aXJhbkBnbWFpbC5jb20wWTATBgcqhkjOPQIB
+BggqhkjOPQMBBwNCAAS8ZuwdsrlPNipVVscDrgUGD/jsbLxJWs8XwQlMvdc3J6Si
+jNfkt+58dDLAbjRsC9DOnuDako4TgTpvPaI/C+RcMAoGCCqGSM49BAMCA0kAMEYC
+IQC9TsHkJlcoZHxalUc8j8UBT1XSbYAdEC+gCWBaTmmPdQIhANmhXTi+8/Xo9NKY
+Bwf1fOrxzg2pQkakKNnAycDmW3Wa
+-----END CERTIFICATE-----

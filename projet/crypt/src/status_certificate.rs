@@ -4,7 +4,8 @@ use serde::{Serialize, Deserialize};
 use std::str;
 use crate::database::{verifier};
 use std::process::{Command};
-
+use actix_files::NamedFile;
+use std::path::PathBuf;
 #[derive(Serialize, Deserialize, Debug,Clone)]
 pub struct CheckInfos {
     email: String,
@@ -70,14 +71,16 @@ match result {
 }
 
 #[post("/verify_status")]
-pub async fn see_ocsp_status(code : web::Form<CheckInfos> ) -> HttpResponse {
+pub async fn see_ocsp_status(code : web::Form<CheckInfos> ) -> Result<NamedFile, actix_web::Error> {
   
     if verifier(code.csr.clone()) == false {
-        return HttpResponse::Ok().body("Le certificat n'existe pas");
+        let _path: PathBuf = "./static/errCert.html".into();
+        return Ok(NamedFile::open(_path)?);
     }
     let mut child = launch_oscp();
     let content: String= request_ocsp(&code.email, &code.csr);
     println!("BODY_CONTENT : {}",content);
     child.kill().expect("Echec de l'arrêt de l'OCSP");
-    HttpResponse::Ok().body(content)
+    let _path: PathBuf = "./static/goodCert.html".into();
+    Ok(NamedFile::open(_path)?)
 }

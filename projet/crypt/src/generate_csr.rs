@@ -102,6 +102,24 @@ fn signed_certificate(email:&String) -> bool {
         Ok(output) => {
             if output.status.success() {
                 println!("{}", String::from_utf8_lossy(&output.stdout));
+                let path_key = format!("usercertificate/{}/{}/private.key",email,RANDOM_NUMBER.to_string());
+                let path_crt2 = format!("usercertificate/{}/{}/certificate.crt",email,RANDOM_NUMBER.to_string());
+                let path_out = format!("usercertificate/{}/{}/{}.pfx",email,RANDOM_NUMBER.to_string(),email);
+                let result2 = Command::new("openssl")
+                .arg("pkcs12")
+                .arg("-export")
+                .arg("-inkey")
+                .arg(path_key)
+                .arg("-in")
+                .arg(path_crt2)
+                .arg("-passout")
+                .arg("pass: ")
+                .arg("-name")
+                .arg("test")
+                .arg("-out")
+                .arg(path_out) 
+                .output();
+                
                 true
             } else {
                 eprintln!("Error: {}", String::from_utf8_lossy(&output.stderr));

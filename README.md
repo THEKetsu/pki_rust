@@ -1,3 +1,2 @@
-# crypto
+# Own PKI in Rust 
 
-cargo run 
